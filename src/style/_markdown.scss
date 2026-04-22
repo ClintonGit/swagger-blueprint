@@ -1,34 +1,191 @@
+// ─── Markdown — GFM + Mermaid + Highlight ────────────────────────────────────
 @use "variables" as *;
 @use "type";
 
 .markdown,
 .renderedMarkdown {
-  p,
-  pre {
-    margin: 1em auto;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-primary, $text-body-default-font-color);
 
-    word-break: break-all; /* Fallback trick */
+  // ── Paragraphs ─────────────────────────────────────────────────────────────
+  p {
+    margin: 0.75em 0;
     word-break: break-word;
-  }
-  pre {
-    color: black;
-    font-weight: normal;
-    white-space: pre-wrap;
-    background: none;
-    padding: 0px;
+
+    &:first-child { margin-top: 0; }
+    &:last-child  { margin-bottom: 0; }
   }
 
+  // ── Headings ───────────────────────────────────────────────────────────────
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display, system-ui, sans-serif);
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 1.25em 0 0.5em;
+    color: var(--text-primary, $text-headline-default-font-color);
+
+    &:first-child { margin-top: 0; }
+  }
+  h1 { font-size: 1.5em; }
+  h2 { font-size: 1.3em; }
+  h3 { font-size: 1.1em; }
+
+  // ── Inline code ────────────────────────────────────────────────────────────
   code {
-    font-size: 14px;
-    padding: 5px 7px;
-
-    border-radius: 4px;
-    background: rgba($info-code-background-color, 0.05);
-
-    @include type.text_code($info-code-font-color);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.875em;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm, 4px);
+    background: rgba(99, 102, 241, 0.08);
+    color: var(--accent, $color-secondary);
+    border: 1px solid rgba(99, 102, 241, 0.15);
   }
 
-  pre > code {
-    display: block;
+  // ── Code blocks (fenced) ───────────────────────────────────────────────────
+  pre {
+    margin: 1em 0;
+    padding: var(--space-4, 16px);
+    background: var(--bg-code, #0a0f1e);
+    border: 1px solid var(--border-subtle, #e2e8f0);
+    border-radius: var(--radius-md, 8px);
+    overflow-x: auto;
+    font-weight: normal;
+
+    code {
+      font-size: 13px;
+      padding: 0;
+      background: none;
+      border: none;
+      color: inherit;
+      border-radius: 0;
+    }
   }
+
+  // ── Blockquote ─────────────────────────────────────────────────────────────
+  blockquote {
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    border-left: 3px solid var(--accent, $color-primary);
+    background: var(--accent-subtle, rgba(99, 102, 241, 0.06));
+    border-radius: 0 var(--radius-sm, 4px) var(--radius-sm, 4px) 0;
+    color: var(--text-secondary);
+
+    p { margin: 0; }
+  }
+
+  // ── Links ──────────────────────────────────────────────────────────────────
+  a {
+    color: var(--accent, $color-info);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 2px;
+    transition: text-decoration-color 150ms ease, color 150ms ease;
+
+    &:hover {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  // ── Horizontal rule ────────────────────────────────────────────────────────
+  hr {
+    border: none;
+    border-top: 1px solid var(--border-subtle, #e2e8f0);
+    margin: 1.5em 0;
+  }
+
+  // ── Lists ──────────────────────────────────────────────────────────────────
+  ul, ol {
+    padding-left: 1.5em;
+    margin: 0.5em 0;
+
+    li { margin: 0.25em 0; }
+  }
+
+  // ── GFM: Task lists ────────────────────────────────────────────────────────
+  ul:has(.markdown-task-checkbox) {
+    list-style: none;
+    padding-left: 0.25em;
+  }
+
+  .markdown-task-checkbox {
+    margin-right: 0.5em;
+    accent-color: var(--accent, $color-primary);
+    pointer-events: none;
+  }
+
+  // ── GFM: Tables ────────────────────────────────────────────────────────────
+  .markdown-table-wrapper {
+    overflow-x: auto;
+    margin: 1em 0;
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--border-subtle, #e2e8f0);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+
+    thead {
+      background: var(--bg-surface, #f8fafc);
+
+      th {
+        padding: 8px 12px;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 12px;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--border-default, #cbd5e1);
+        white-space: nowrap;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid var(--border-subtle, #e2e8f0);
+        transition: background 150ms ease;
+
+        &:last-child { border-bottom: none; }
+        &:hover { background: var(--bg-surface, #f8fafc); }
+      }
+
+      td {
+        padding: 8px 12px;
+        vertical-align: top;
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  // ── GFM: Strikethrough ─────────────────────────────────────────────────────
+  del {
+    opacity: 0.5;
+    text-decoration-color: var(--text-muted);
+  }
+
+  // ── rehype-highlight: base overrides ───────────────────────────────────────
+  // Colors set via CSS, works with both light/dark
+  .hljs {
+    background: var(--bg-code, #0a0f1e) !important;
+    color: #e2e8f0;
+    padding: 0;
+  }
+
+  .hljs-keyword,
+  .hljs-selector-tag  { color: #c084fc; }  // purple
+  .hljs-string,
+  .hljs-attr          { color: #86efac; }  // green
+  .hljs-number        { color: #fdba74; }  // orange
+  .hljs-comment       { color: #6b7280; font-style: italic; }
+  .hljs-built_in      { color: #67e8f9; }  // cyan
+  .hljs-type          { color: #a5b4fc; }  // indigo
+  .hljs-variable      { color: #e2e8f0; }
+  .hljs-title,
+  .hljs-function      { color: #818cf8; }  // violet
+  .hljs-literal       { color: #f87171; }  // red
+  .hljs-meta          { color: #94a3b8; }
 }

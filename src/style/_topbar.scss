@@ -1,126 +1,174 @@
+// ─── Topbar — Glass Navigation (The Living Blueprint) ───────────────────────
 @use "variables" as *;
 @use "type";
 
 .topbar {
-  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0 var(--space-6, 24px);
+  height: 52px;
+  background: rgba(8, 12, 20, 0.82);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
 
-  background-color: $topbar-background-color;
   .topbar-wrapper {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
+    height: 100%;
+    gap: 12px;
+    max-width: 1400px;
+    margin: 0 auto;
   }
+
   @container swagger-ui (max-width: 550px) {
+    height: auto;
+    padding: 10px 16px;
+
     .topbar-wrapper {
       flex-direction: column;
-      align-items: start;
+      align-items: flex-start;
+      gap: 8px;
     }
   }
 
+  // Brand / logo link
   a {
-    font-size: 1.5em;
-    font-weight: bold;
-
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font-display, "SF Pro Display", system-ui, sans-serif);
     display: flex;
     align-items: center;
-    flex: 1;
-
-    max-width: 300px;
-
+    gap: 8px;
+    flex: 0 0 auto;
     text-decoration: none;
+    color: #f8fafc;
+    letter-spacing: -0.3px;
+    transition: opacity 150ms ease;
 
-    @include type.text_headline($topbar-link-font-color);
+    &:hover { opacity: 0.8; }
 
     span {
       margin: 0;
-      padding: 0 10px;
+      padding: 0;
     }
   }
 
+  // URL input + Explore button
   .download-url-wrapper {
     display: flex;
-    flex: 3;
+    flex: 1;
     justify-content: flex-end;
-    max-width: 600px;
+    max-width: 560px;
     margin-left: auto;
+    gap: 0;
 
     input[type="text"] {
       width: 100%;
       max-width: 100%;
       margin: 0;
-
-      border: 2px solid $topbar-download-url-wrapper-element-border-color;
-      border-radius: 4px 0 0 4px;
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+      color: #f8fafc;
+      font-family: var(--font-mono, monospace);
+      font-size: 13px;
       outline: none;
+      transition: border-color 150ms ease, background 150ms ease;
+
+      &::placeholder { color: rgba(248, 250, 252, 0.35); }
+
+      &:focus {
+        background: rgba(255, 255, 255, 0.11);
+        border-color: rgba(99, 102, 241, 0.7);
+      }
     }
 
     .select-label {
       display: flex;
       align-items: center;
-
       width: 100%;
-      max-width: 600px;
+      max-width: 560px;
       margin: 0;
       color: #f0f0f0;
+
       span {
-        font-size: 16px;
-
+        font-size: 13px;
         flex: 1;
-
-        padding: 0 10px 0 0;
-
+        padding: 0 8px 0 0;
         text-align: right;
+        color: rgba(248, 250, 252, 0.6);
       }
 
       select {
         flex: 2;
-
         width: 100%;
-
-        border: 2px solid $topbar-download-url-wrapper-element-border-color;
+        padding: 6px 10px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-right: none;
+        color: #f8fafc;
+        font-size: 13px;
         outline: none;
         box-shadow: none;
+        cursor: pointer;
+
+        &:focus { border-color: rgba(99, 102, 241, 0.7); }
       }
     }
 
     .download-url-button {
-      font-size: 16px;
-      font-weight: bold;
-
-      padding: 4px 30px;
-
+      padding: 6px 20px;
+      background: #6366f1;
       border: none;
-      border-radius: 0 4px 4px 0;
-      background: $topbar-download-url-button-background-color;
+      border-radius: 0 6px 6px 0;
+      color: #ffffff;
+      font-family: var(--font-sans, system-ui, sans-serif);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 150ms ease, transform 100ms ease;
+      white-space: nowrap;
 
-      @include type.text_headline($topbar-download-url-button-font-color);
+      &:hover  { background: #4f46e5; }
+      &:active { transform: scale(0.98); }
+      &:focus-visible { outline: 2px solid #818cf8; outline-offset: 2px; }
     }
   }
+
   @container swagger-ui (max-width: 550px) {
-    .download-url-wrapper {
-      width: 100%;
-    }
+    .download-url-wrapper { width: 100%; }
   }
 
+  // Dark mode toggle button
   .dark-mode-toggle {
-    margin-left: 10px;
-    opacity: 0.8;
-    transition: all 0.2s;
-    cursor: pointer;
+    margin-left: 8px;
+    flex-shrink: 0;
 
     button {
-      background: none;
-      border: none;
-      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 150ms ease, border-color 150ms ease;
 
-      svg {
-        fill: #e4e6e6;
+      svg { fill: #e4e6e6; width: 16px; height: 16px; }
+
+      &:hover {
+        background: rgba(99, 102, 241, 0.2);
+        border-color: rgba(99, 102, 241, 0.5);
       }
-    }
 
-    &:hover {
-      opacity: 1;
+      &:focus-visible { outline: 2px solid #818cf8; outline-offset: 2px; }
     }
   }
 }

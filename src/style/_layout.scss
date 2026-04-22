@@ -159,11 +159,13 @@
 }
 
 .opblock {
-  margin: 0 0 15px 0;
+  margin: 0 0 10px 0;
 
-  border: 1px solid $opblock-border-color;
-  border-radius: 4px;
-  box-shadow: 0 0 3px rgba($opblock-box-shadow-color, 0.19);
+  border: 1px solid var(--border-subtle, rgba(0,0,0,0.12));
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.08));
+  overflow: hidden;
+  transition: box-shadow var(--transition-fast, 150ms ease);
 
   .tab-header {
     display: flex;

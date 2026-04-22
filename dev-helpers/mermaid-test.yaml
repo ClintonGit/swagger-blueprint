@@ -1,0 +1,522 @@
+openapi: 3.0.0
+info:
+  title: Mermaid Complete Diagram Gallery
+  version: 2.0.0
+  description: |
+    # Mermaid Diagram Gallery
+
+    รวมตัวอย่าง Mermaid ทุกประเภท พร้อมภาพประกอบ
+
+    ![Gallery Banner](https://placehold.co/800x160/0f1623/6366f1?text=Mermaid+Diagram+Gallery&font=montserrat)
+
+    ---
+
+    ## 1. Flowchart — Top-Down (`TD`)
+
+    ```mermaid
+    flowchart TD
+      A([Start]) --> B{Is User Logged In?}
+      B -- Yes --> C[Load Dashboard]
+      B -- No  --> D[Show Login Page]
+      D --> E[/Enter Credentials/]
+      E --> F{Valid?}
+      F -- Yes --> G[(Save Session)]
+      F -- No  --> H[Show Error]
+      H --> E
+      G --> C
+      C --> I([End])
+
+      style A fill:#6366f1,color:#fff,stroke:#818cf8
+      style I fill:#6366f1,color:#fff,stroke:#818cf8
+      style F fill:#1e1b4b,color:#e2e8f0,stroke:#6366f1
+      style B fill:#1e1b4b,color:#e2e8f0,stroke:#6366f1
+    ```
+
+    ---
+
+    ## 2. Flowchart — Left-Right (`LR`)
+
+    ```mermaid
+    flowchart LR
+      Client -->|REST| GW[API Gateway]
+      GW -->|route /users| US[User Service]
+      GW -->|route /orders| OS[Order Service]
+      GW -->|route /pay| PS[Payment Service]
+      US --- DB1[(Users DB)]
+      OS --- DB2[(Orders DB)]
+      PS --- DB3[(Payment DB)]
+      PS -->|webhook| OS
+
+      style GW fill:#6366f1,color:#fff,stroke:#818cf8
+    ```
+
+    ---
+
+    ## 3. Flowchart — Right-Left (`RL`)
+
+    ```mermaid
+    flowchart RL
+      Report --> Aggregate
+      Aggregate --> Transform
+      Transform --> Ingest
+      Ingest --> SourceA[(S3 Bucket)]
+      Ingest --> SourceB[(Kafka)]
+      Ingest --> SourceC[(Postgres)]
+    ```
+
+    ---
+
+    ## 4. Flowchart — Bottom-Top (`BT`)
+
+    ```mermaid
+    flowchart BT
+      DB[(Database)] --> ORM[ORM Layer]
+      ORM --> Service[Business Service]
+      Service --> Controller[REST Controller]
+      Controller --> Client
+    ```
+
+    ---
+
+    ## 5. Flowchart — Subgraph
+
+    ```mermaid
+    flowchart TD
+      subgraph Frontend
+        UI[React App] --> Store[Redux Store]
+      end
+
+      subgraph Backend
+        API[Express API] --> Auth[Auth Middleware]
+        Auth --> Handler[Route Handler]
+        Handler --> DB[(PostgreSQL)]
+      end
+
+      subgraph Infra
+        CDN[CloudFront] --> UI
+        LB[Load Balancer] --> API
+      end
+
+      Store -->|HTTP| LB
+    ```
+
+    ---
+
+    ## 6. Sequence Diagram
+
+    ```mermaid
+    sequenceDiagram
+      autonumber
+      actor U as User
+      participant FE as Frontend
+      participant GW as API Gateway
+      participant AS as Auth Service
+      participant DB as Database
+
+      U->>FE: Fill login form
+      FE->>GW: POST /auth/login
+      GW->>AS: Validate credentials
+      AS->>DB: SELECT user WHERE email=?
+      DB-->>AS: user row
+      AS-->>GW: JWT token
+      GW-->>FE: 200 { token }
+      FE->>FE: Store token
+      FE-->>U: Redirect to dashboard
+
+      Note over AS,DB: Token expires in 1h
+    ```
+
+    ---
+
+    ## 7. Class Diagram
+
+    ```mermaid
+    classDiagram
+      class Animal {
+        +String name
+        +int age
+        +makeSound() String
+      }
+
+      class Dog {
+        +String breed
+        +fetch() void
+      }
+
+      class Cat {
+        +bool indoor
+        +purr() void
+      }
+
+      class Owner {
+        +String name
+        +List~Animal~ pets
+        +adopt(Animal) void
+      }
+
+      Animal <|-- Dog
+      Animal <|-- Cat
+      Owner "1" --> "0..*" Animal : owns
+    ```
+
+    ---
+
+    ## 8. State Diagram
+
+    ```mermaid
+    stateDiagram-v2
+      [*] --> Draft
+
+      state "In Review" as IR {
+        [*] --> PeerReview
+        PeerReview --> LeadReview : approved
+        PeerReview --> Rejected : changes needed
+        LeadReview --> Approved : sign-off
+        LeadReview --> Rejected : major issues
+      }
+
+      Draft --> IR : submit
+      Rejected --> Draft : revise
+      Approved --> Published : deploy
+      Published --> Archived : sunset
+      Archived --> [*]
+    ```
+
+    ---
+
+    ## 9. ER Diagram
+
+    ```mermaid
+    erDiagram
+      USER {
+        uuid id PK
+        string email UK
+        string name
+        datetime created_at
+      }
+
+      ORDER {
+        uuid id PK
+        uuid user_id FK
+        string status
+        decimal total
+        datetime placed_at
+      }
+
+      ORDER_ITEM {
+        uuid id PK
+        uuid order_id FK
+        uuid product_id FK
+        int quantity
+        decimal unit_price
+      }
+
+      PRODUCT {
+        uuid id PK
+        string name
+        decimal price
+        int stock
+      }
+
+      USER ||--o{ ORDER : places
+      ORDER ||--|{ ORDER_ITEM : contains
+      PRODUCT ||--o{ ORDER_ITEM : "included in"
+    ```
+
+    ---
+
+    ## 10. Gantt Chart
+
+    ```mermaid
+    gantt
+      title API v2.0 Release Plan
+      dateFormat YYYY-MM-DD
+      excludes weekends
+
+      section Design
+        API Design         :done,    des1, 2024-01-01, 2024-01-10
+        Schema Definition  :done,    des2, 2024-01-08, 2024-01-15
+
+      section Backend
+        Auth Service       :done,    be1, 2024-01-15, 2024-02-01
+        User Service       :active,  be2, 2024-02-01, 2024-02-20
+        Order Service      :         be3, 2024-02-15, 2024-03-05
+
+      section Frontend
+        Login Flow         :done,    fe1, 2024-01-20, 2024-02-05
+        Dashboard          :active,  fe2, 2024-02-05, 2024-02-25
+        Order Flow         :         fe3, 2024-02-20, 2024-03-10
+
+      section Launch
+        QA Testing         :crit,    qa1, 2024-03-05, 2024-03-15
+        Beta Release       :crit,    rel1, 2024-03-15, 2024-03-20
+        GA Release         :milestone, rel2, 2024-03-20, 0d
+    ```
+
+    ---
+
+    ## 11. Pie Chart
+
+    ```mermaid
+    pie title API Traffic by Endpoint (Last 30 Days)
+      "GET /users"    : 34.2
+      "POST /orders"  : 22.8
+      "GET /products" : 18.5
+      "POST /auth"    : 12.1
+      "PUT /users"    : 7.4
+      "Other"         : 5.0
+    ```
+
+    ---
+
+    ## 12. Git Graph
+
+    ```mermaid
+    gitGraph
+      commit id: "init"
+      branch develop
+      checkout develop
+      commit id: "feat: auth"
+      commit id: "feat: users"
+      branch feature/orders
+      checkout feature/orders
+      commit id: "feat: order model"
+      commit id: "feat: order API"
+      checkout develop
+      merge feature/orders id: "merge orders"
+      commit id: "fix: validation"
+      checkout main
+      merge develop id: "v1.0.0" tag: "v1.0.0"
+      checkout develop
+      commit id: "feat: payments"
+    ```
+
+    ---
+
+    ## 13. User Journey
+
+    ```mermaid
+    journey
+      title User Checkout Journey
+      section Browse
+        Search product   : 5: User
+        View details     : 4: User
+        Read reviews     : 3: User
+      section Add to Cart
+        Click Add        : 5: User
+        View cart        : 4: User, System
+        Apply coupon     : 2: User
+      section Checkout
+        Enter address    : 3: User
+        Choose shipping  : 4: User, System
+        Enter payment    : 2: User
+        Confirm order    : 5: User, System
+      section Post-Order
+        Receive email    : 5: System
+        Track shipment   : 4: User, System
+        Receive package  : 5: User
+    ```
+
+    ---
+
+    ## 14. Mindmap
+
+    ```mermaid
+    mindmap
+      root((REST API))
+        Security
+          OAuth 2.0
+          API Keys
+          Rate Limiting
+          CORS
+        Design
+          RESTful Conventions
+          Versioning
+            URL Path
+            Header
+          Pagination
+          Filtering
+        Performance
+          Caching
+            Redis
+            CDN
+          Compression
+          Connection Pooling
+        Documentation
+          OpenAPI
+          Postman
+          SDK Generation
+    ```
+
+    ---
+
+    ## 15. Timeline
+
+    ```mermaid
+    timeline
+      title API Development History
+      section 2022
+        Q1 : Project kickoff
+           : Architecture design
+        Q2 : v0.1 Alpha released
+        Q3 : Beta testing
+        Q4 : v1.0 GA launch
+      section 2023
+        Q1 : v1.1 — OAuth added
+        Q2 : v1.2 — Webhooks
+        Q3 : v2.0 — GraphQL layer
+        Q4 : v2.1 — gRPC support
+      section 2024
+        Q1 : v3.0 — AI features
+        Q2 : v3.1 — Streaming API
+    ```
+
+    ---
+
+    ## 16. Quadrant Chart
+
+    ```mermaid
+    quadrantChart
+      title API Endpoints — Priority Matrix
+      x-axis Low Traffic --> High Traffic
+      y-axis Low Complexity --> High Complexity
+      quadrant-1 Optimize
+      quadrant-2 Core Investment
+      quadrant-3 Deprioritize
+      quadrant-4 Simplify
+
+      POST /auth/login: [0.8, 0.3]
+      GET /users: [0.9, 0.2]
+      POST /orders: [0.75, 0.6]
+      GET /reports: [0.2, 0.9]
+      DELETE /users: [0.1, 0.4]
+      PUT /settings: [0.15, 0.2]
+      POST /webhooks: [0.5, 0.8]
+      GET /health: [0.95, 0.05]
+    ```
+
+    ---
+
+    ## 17. XY Chart
+
+    ```mermaid
+    xychart-beta
+      title "Monthly API Requests (millions)"
+      x-axis [Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]
+      y-axis "Requests (M)" 0 --> 120
+      bar  [45, 52, 61, 58, 70, 83, 91, 88, 95, 102, 110, 118]
+      line [45, 52, 61, 58, 70, 83, 91, 88, 95, 102, 110, 118]
+    ```
+
+    ---
+
+    ## ภาพประกอบ
+
+    รองรับ Markdown image syntax เต็มรูปแบบค่ะ:
+
+    ![System Architecture Diagram](https://placehold.co/600x300/0f1623/818cf8?text=System+Architecture&font=montserrat)
+
+    > **Figure 1:** ภาพแสดง System Architecture ของระบบ
+
+    ![API Flow](https://placehold.co/600x200/161e2e/22c55e?text=API+Request+Flow&font=montserrat)
+
+    > **Figure 2:** API Request Flow ตั้งแต่ Client ถึง Database
+
+paths:
+  /diagrams:
+    get:
+      summary: List all diagram types
+      description: |
+        Returns metadata for all supported Mermaid diagram types.
+
+        ![Endpoint Overview](https://placehold.co/500x120/0f1623/6366f1?text=GET+%2Fdiagrams&font=montserrat)
+
+        ### Supported Types
+
+        ```mermaid
+        mindmap
+          root((Diagram Types))
+            Flow
+              flowchart TD
+              flowchart LR
+              flowchart RL
+              flowchart BT
+            Sequence
+              sequenceDiagram
+            Data Model
+              classDiagram
+              erDiagram
+            Behavior
+              stateDiagram-v2
+              journey
+            Planning
+              gantt
+              timeline
+            Analytics
+              pie
+              xychart-beta
+              quadrantChart
+            Architecture
+              gitGraph
+              mindmap
+        ```
+
+        | Type | Directive | Use Case |
+        |------|-----------|----------|
+        | Flowchart | `flowchart TD/LR` | Process flows |
+        | Sequence | `sequenceDiagram` | API interactions |
+        | Class | `classDiagram` | Data models |
+        | State | `stateDiagram-v2` | State machines |
+        | ER | `erDiagram` | Database schema |
+        | Gantt | `gantt` | Project timelines |
+        | Pie | `pie` | Distributions |
+        | Git | `gitGraph` | Branch history |
+        | Journey | `journey` | User flows |
+        | Mindmap | `mindmap` | Concept maps |
+        | Timeline | `timeline` | History |
+        | Quadrant | `quadrantChart` | Priority matrix |
+        | XY Chart | `xychart-beta` | Metrics over time |
+
+      responses:
+        "200":
+          description: List of diagram types
+
+  /diagrams/class:
+    get:
+      summary: Class diagram example
+      description: |
+        Domain model for the Orders system.
+
+        ```mermaid
+        classDiagram
+          class Order {
+            +UUID id
+            +OrderStatus status
+            +Decimal total
+            +place() void
+            +cancel() void
+            +refund(amount) bool
+          }
+
+          class OrderItem {
+            +UUID orderId
+            +UUID productId
+            +int qty
+            +Decimal price
+          }
+
+          class OrderStatus {
+            <<enumeration>>
+            PENDING
+            PROCESSING
+            SHIPPED
+            DELIVERED
+            CANCELLED
+          }
+
+          Order "1" *-- "1..*" OrderItem : contains
+          Order --> OrderStatus : has
+        ```
+      responses:
+        "200":
+          description: OK

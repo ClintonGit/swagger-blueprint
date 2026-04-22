@@ -85,6 +85,24 @@ $opblock_colors: (
 );
 
 html.dark-mode {
+  // Deep Space CSS token overrides
+  --bg-base:        #080c14;
+  --bg-surface:     #0f1623;
+  --bg-elevated:    #161e2e;
+  --bg-code:        #020409;
+  --accent:         #818cf8;
+  --accent-hover:   #6366f1;
+  --accent-subtle:  rgba(99, 102, 241, 0.15);
+  --accent-glow:    rgba(129, 140, 248, 0.4);
+  --text-primary:   #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted:     #475569;
+  --border-subtle:  #1e2d45;
+  --border-default: #263548;
+  --mermaid-bg:     #0a0f1e;
+  --mermaid-border: rgba(129, 140, 248, 0.35);
+  --mermaid-corner: #818cf8;
+
   background: $neutral-98;
 
   .swagger-ui {

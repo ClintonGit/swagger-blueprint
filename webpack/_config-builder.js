@@ -122,11 +122,14 @@ function buildConfig(
             "..",
             "node_modules/safe-buffer"
           ),
+          // polyfill for mermaid v11 / langium dependency
+          "process/browser": require.resolve("process/browser.js"),
         },
         fallback: {
           fs: false,
           stream: require.resolve("stream-browserify"),
           buffer: require.resolve("buffer"),
+          process: require.resolve("process/browser.js"),
         },
       },
 

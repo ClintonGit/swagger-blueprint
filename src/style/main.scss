@@ -1,10 +1,14 @@
 @use "sass:meta";
 @use "type";
 
+// Design tokens (CSS custom properties — must load outside .swagger-ui to reach :root)
+@include meta.load-css("tokens");
+
 .swagger-ui {
   container-name: swagger-ui;
   container-type: inline-size;
-  
+  font-family: var(--font-sans, "SF Pro Text", system-ui, sans-serif);
+
   @include type.text_body();
   @include meta.load-css("~tachyons-sass/tachyons.scss");
   @include meta.load-css("mixins");
@@ -23,6 +27,7 @@
   @include meta.load-css("errors");
   @include meta.load-css("split-pane-mode");
   @include meta.load-css("markdown");
+  @include meta.load-css("mermaid");
   @include meta.load-css("../core/plugins/json-schema-2020-12/components/all");
   @include meta.load-css("../core/plugins/oas31/components/all");
 }

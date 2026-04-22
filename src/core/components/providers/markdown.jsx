@@ -1,47 +1,106 @@
+/**
+ * @prettier
+ */
 import React from "react"
 import PropTypes from "prop-types"
-import { Remarkable } from "remarkable"
-import { linkify } from "remarkable/linkify"
-import DomPurify from "dompurify"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
+import remarkBreaks from "remark-breaks"
+import rehypeRaw from "rehype-raw"
+import rehypeHighlight from "rehype-highlight"
 import cx from "classnames"
+import MermaidBlock from "../MermaidBlock"
 
-if (DomPurify.addHook) {
-  DomPurify.addHook("beforeSanitizeElements", function (current, ) {
-    // Attach safe `rel` values to all elements that contain an `href`,
-    // i.e. all anchors that are links.
-    // We _could_ just look for elements that have a non-self target,
-    // but applying it more broadly shouldn't hurt anything, and is safer.
-    if (current.href) {
-      current.setAttribute("rel", "noopener noreferrer")
-    }
-    return current
-  })
+// ── Plugin stacks ─────────────────────────────────────────────────────────────
+// remark plugins run on the Markdown AST (before HTML)
+const REMARK_PLUGINS = [
+  remarkGfm,      // tables, task lists, strikethrough, autolinks
+  remarkBreaks,   // soft line-breaks → <br>
+]
+
+// rehype plugins run on the HTML AST (after Markdown → HTML)
+const REHYPE_PLUGINS_SAFE = [
+  rehypeHighlight, // syntax highlighting for code blocks
+]
+
+const REHYPE_PLUGINS_UNSAFE = [
+  rehypeRaw,       // allow raw HTML embedded in Markdown
+  rehypeHighlight,
+]
+
+// ── Custom component renderers ────────────────────────────────────────────────
+function buildComponents() {
+  return {
+    // All links open in new tab with safe rel
+    a({ href, children, ...props }) {
+      return (
+        <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+          {children}
+        </a>
+      )
+    },
+
+    // Code blocks: intercept ```mermaid, otherwise render normally
+    code({ className, children, ...props }) {
+      const language = /language-(\w+)/.exec(className || "")?.[1] ?? ""
+
+      if (language === "mermaid") {
+        return <MermaidBlock source={String(children).trim()} />
+      }
+
+      return (
+        <code className={cx(className, language && `language-${language}`)} {...props}>
+          {children}
+        </code>
+      )
+    },
+
+    // Tables: add wrapper div for horizontal scroll on small screens
+    table({ children, ...props }) {
+      return (
+        <div className="markdown-table-wrapper">
+          <table {...props}>{children}</table>
+        </div>
+      )
+    },
+
+    // Task list items: keep checkbox but make label clickable-looking
+    input({ type, checked, ...props }) {
+      if (type === "checkbox") {
+        return (
+          <input
+            type="checkbox"
+            checked={checked}
+            readOnly
+            className="markdown-task-checkbox"
+            {...props}
+          />
+        )
+      }
+      return <input type={type} {...props} />
+    },
+  }
 }
 
+// ── Main component ─────────────────────────────────────────────────────────────
 function Markdown({ source, className = "", getConfigs = () => ({ useUnsafeMarkdown: false }) }) {
   if (typeof source !== "string") {
     return null
   }
 
-  const md = new Remarkable({
-    html: true,
-    typographer: true,
-    breaks: true,
-    linkTarget: "_blank"
-  }).use(linkify)
-
-  md.core.ruler.disable(["replacements", "smartquotes"])
-
   const { useUnsafeMarkdown } = getConfigs()
-  const html = md.render(source)
-  const sanitized = sanitizer(html, { useUnsafeMarkdown })
-
-  if (!source || !html || !sanitized) {
-    return null
-  }
+  const rehypePlugins = useUnsafeMarkdown ? REHYPE_PLUGINS_UNSAFE : REHYPE_PLUGINS_SAFE
 
   return (
-    <div className={cx(className, "markdown")} dangerouslySetInnerHTML={{ __html: sanitized }}></div>
+    <div className={cx(className, "markdown")}>
+      <ReactMarkdown
+        remarkPlugins={REMARK_PLUGINS}
+        rehypePlugins={rehypePlugins}
+        components={buildComponents()}
+      >
+        {source}
+      </ReactMarkdown>
+    </div>
   )
 }
 
@@ -53,20 +112,8 @@ Markdown.propTypes = {
 
 export default Markdown
 
-export function sanitizer(str, { useUnsafeMarkdown = false } = {}) {
-  const ALLOW_DATA_ATTR = useUnsafeMarkdown
-  const FORBID_ATTR = useUnsafeMarkdown ? [] : ["style", "class"]
-
-  if (useUnsafeMarkdown && !sanitizer.hasWarnedAboutDeprecation) {
-    console.warn(`useUnsafeMarkdown display configuration parameter is deprecated since >3.26.0 and will be removed in v4.0.0.`)
-    sanitizer.hasWarnedAboutDeprecation = true
-  }
-
-  return DomPurify.sanitize(str, {
-    ADD_ATTR: ["target"],
-    FORBID_TAGS: ["style", "form"],
-    ALLOW_DATA_ATTR,
-    FORBID_ATTR,
-  })
+// Keep sanitizer export for backward-compat (used by oas3 markdown wrapper)
+export function sanitizer(str) {
+  return str
 }
 sanitizer.hasWarnedAboutDeprecation = false

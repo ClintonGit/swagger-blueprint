@@ -1,0 +1,177 @@
+// ─── Design Tokens — The Living Blueprint ───────────────────────────────────
+// Creative Direction: "Deep Space, Not Dark Room" + Apple precision
+
+:root {
+  // ── Backgrounds (Light) ──────────────────────────────────────────────────
+  --bg-base:          #ffffff;
+  --bg-surface:       #f8fafc;
+  --bg-elevated:      #f1f5f9;
+  --bg-overlay:       rgba(0, 0, 0, 0.48);
+
+  // ── Backgrounds (used in dark mode override below) ───────────────────────
+  --bg-code:          #0a0f1e;
+
+  // ── Brand Accent ─────────────────────────────────────────────────────────
+  --accent:           #6366f1;   // indigo-500
+  --accent-hover:     #4f46e5;   // indigo-600
+  --accent-subtle:    #eef2ff;   // indigo-50
+  --accent-glow:      rgba(99, 102, 241, 0.35);
+
+  // ── Text ─────────────────────────────────────────────────────────────────
+  --text-primary:     #0f172a;   // slate-900
+  --text-secondary:   #475569;   // slate-600
+  --text-muted:       #94a3b8;   // slate-400
+  --text-inverse:     #f8fafc;
+
+  // ── Borders ──────────────────────────────────────────────────────────────
+  --border-subtle:    #e2e8f0;   // slate-200
+  --border-default:   #cbd5e1;   // slate-300
+  --border-strong:    #94a3b8;   // slate-400
+
+  // ── HTTP Method Colors ────────────────────────────────────────────────────
+  --method-get-bg:    rgba(34, 197, 94, 0.12);
+  --method-get-text:  #15803d;
+  --method-get-border:#16a34a;
+
+  --method-post-bg:   rgba(99, 102, 241, 0.12);
+  --method-post-text: #4338ca;
+  --method-post-border:#6366f1;
+
+  --method-put-bg:    rgba(245, 158, 11, 0.12);
+  --method-put-text:  #92400e;
+  --method-put-border:#f59e0b;
+
+  --method-delete-bg: rgba(239, 68, 68, 0.10);
+  --method-delete-text:#991b1b;
+  --method-delete-border:#ef4444;
+
+  --method-patch-bg:  rgba(6, 182, 212, 0.12);
+  --method-patch-text:#0e7490;
+  --method-patch-border:#06b6d4;
+
+  --method-head-bg:   rgba(168, 85, 247, 0.12);
+  --method-head-text: #6b21a8;
+  --method-head-border:#a855f7;
+
+  --method-options-bg: rgba(148, 163, 184, 0.12);
+  --method-options-text:#475569;
+  --method-options-border:#94a3b8;
+
+  // ── Mermaid Diagram ──────────────────────────────────────────────────────
+  --mermaid-bg:       #f8fafc;
+  --mermaid-border:   rgba(99, 102, 241, 0.3);
+  --mermaid-corner:   #6366f1;
+  --mermaid-error-bg: #fff7ed;
+  --mermaid-error-text:#92400e;
+  --mermaid-error-border:#f59e0b;
+
+  // ── Spacing ──────────────────────────────────────────────────────────────
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  // ── Radii ────────────────────────────────────────────────────────────────
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-pill: 9999px;
+
+  // ── Typography ───────────────────────────────────────────────────────────
+  --font-sans:  "SF Pro Text", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "SF Pro Display", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:  "JetBrains Mono", "SF Mono", "Fira Code", "Cascadia Code", monospace;
+
+  // ── Transitions ──────────────────────────────────────────────────────────
+  --transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow:   400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  // ── Shadows ──────────────────────────────────────────────────────────────
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-lg:  0 8px 30px rgba(0, 0, 0, 0.14);
+  --shadow-glow:0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+// ── Dark Mode Override ───────────────────────────────────────────────────────
+// "Deep Space, Not Dark Room" — depth layers, not just black
+[data-theme="dark"],
+.dark-mode {
+  // Backgrounds
+  --bg-base:          #080c14;   // deep navy-black — has warmth
+  --bg-surface:       #0f1623;   // endpoint rows, cards
+  --bg-elevated:      #161e2e;   // expanded panels, modals
+  --bg-code:          #020409;   // "terminal within terminal"
+  --bg-overlay:       rgba(0, 0, 0, 0.72);
+
+  // Brand
+  --accent:           #818cf8;   // indigo-400 (lighter for dark bg)
+  --accent-hover:     #6366f1;
+  --accent-subtle:    rgba(99, 102, 241, 0.15);
+  --accent-glow:      rgba(129, 140, 248, 0.4);
+
+  // Text
+  --text-primary:     #e2e8f0;   // off-white, reduces eye strain
+  --text-secondary:   #94a3b8;
+  --text-muted:       #475569;
+  --text-inverse:     #0f172a;
+
+  // Borders
+  --border-subtle:    #1e2d45;
+  --border-default:   #263548;
+  --border-strong:    #334155;
+
+  // HTTP Methods (adjusted for dark bg)
+  --method-get-bg:    rgba(34, 197, 94, 0.15);
+  --method-get-text:  #4ade80;
+  --method-get-border:#22c55e;
+
+  --method-post-bg:   rgba(129, 140, 248, 0.15);
+  --method-post-text: #a5b4fc;
+  --method-post-border:#818cf8;
+
+  --method-put-bg:    rgba(251, 191, 36, 0.15);
+  --method-put-text:  #fbbf24;
+  --method-put-border:#f59e0b;
+
+  --method-delete-bg: rgba(239, 68, 68, 0.15);
+  --method-delete-text:#f87171;
+  --method-delete-border:#ef4444;
+
+  --method-patch-bg:  rgba(34, 211, 238, 0.15);
+  --method-patch-text:#22d3ee;
+  --method-patch-border:#06b6d4;
+
+  --method-head-bg:   rgba(192, 132, 252, 0.15);
+  --method-head-text: #c084fc;
+  --method-head-border:#a855f7;
+
+  // Mermaid
+  --mermaid-bg:       #0a0f1e;
+  --mermaid-border:   rgba(129, 140, 248, 0.35);
+  --mermaid-corner:   #818cf8;
+  --mermaid-error-bg: #1c1400;
+  --mermaid-error-text:#fcd34d;
+  --mermaid-error-border:#f59e0b;
+
+  // Shadows (glow-based in dark)
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg:  0 8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-glow:0 0 0 3px rgba(129, 140, 248, 0.3);
+}
+
+// ── Reduced Motion ────────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

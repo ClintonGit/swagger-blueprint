@@ -1,0 +1,203 @@
+// ─── Mermaid Block — "Blueprint Inset" ──────────────────────────────────────
+// Creative Direction: technical drawing boundary + draft-in animation
+
+.mermaid-block {
+  position: relative;
+  margin: var(--space-4) 0;
+  background: var(--mermaid-bg);
+  border: 1px dashed var(--mermaid-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+
+  &:hover {
+    border-color: var(--accent);
+
+    .mermaid-block__toolbar {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // ── Engineering drawing corner marks ─────────────────────────────────────
+  &__corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--mermaid-corner);
+    border-style: solid;
+    opacity: 0.7;
+
+    &--tl { top: 6px; left: 6px;  border-width: 1.5px 0 0 1.5px; }
+    &--tr { top: 6px; right: 6px; border-width: 1.5px 1.5px 0 0; }
+    &--bl { bottom: 6px; left: 6px;  border-width: 0 0 1.5px 1.5px; }
+    &--br { bottom: 6px; right: 6px; border-width: 0 1.5px 1.5px 0; }
+  }
+
+  // ── SVG diagram container ─────────────────────────────────────────────────
+  &__diagram {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    svg {
+      display: block;
+      // width set by JS (natural bbox px) — CSS clamps to container if smaller
+      max-width: 100%;
+      height: auto;
+      animation: mermaid-draft-in 0.5s ease-out both;
+    }
+  }
+
+  // ── Hover toolbar ─────────────────────────────────────────────────────────
+  &__toolbar {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    display: flex;
+    gap: var(--space-1);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition:
+      opacity var(--transition-fast),
+      transform var(--transition-fast);
+  }
+
+  &__toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    cursor: pointer;
+    transition:
+      background var(--transition-fast),
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+
+    &:hover {
+      background: var(--accent-subtle);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  }
+
+  // ── Loading skeleton ──────────────────────────────────────────────────────
+  &--loading {
+    border-style: dashed;
+  }
+
+  &__skeleton {
+    height: 120px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--bg-elevated);
+  }
+
+  &__shimmer {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(99, 102, 241, 0.08) 40%,
+      rgba(99, 102, 241, 0.15) 50%,
+      rgba(99, 102, 241, 0.08) 60%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: mermaid-shimmer 1.6s ease-in-out infinite;
+  }
+
+  // ── Error state ────────────────────────────────────────────────────────────
+  &--error {
+    border-color: var(--mermaid-error-border);
+    border-style: solid;
+    background: var(--mermaid-error-bg);
+    padding: 0;
+    overflow: visible;
+  }
+
+  &__error-banner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    background: var(--mermaid-error-bg);
+    border-radius: var(--radius-md);
+    color: var(--mermaid-error-text);
+    font-family: var(--font-sans);
+    font-size: 13px;
+  }
+
+  &__error-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  &__toggle-btn {
+    margin-left: auto;
+    padding: 2px 10px;
+    background: transparent;
+    border: 1px solid var(--mermaid-error-border);
+    border-radius: var(--radius-pill);
+    color: var(--mermaid-error-text);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+
+    &:hover {
+      background: var(--mermaid-error-border);
+      color: var(--bg-base);
+    }
+  }
+
+  // ── Raw code view ──────────────────────────────────────────────────────────
+  &__raw-code {
+    margin: 0;
+    padding: var(--space-4);
+    background: var(--bg-code);
+    border-top: 1px solid var(--border-subtle);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    overflow-x: auto;
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-primary);
+      line-height: 1.6;
+      white-space: pre;
+    }
+  }
+}
+
+// ── Keyframe Animations ────────────────────────────────────────────────────────
+@keyframes mermaid-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes mermaid-draft-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
